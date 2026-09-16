@@ -7,7 +7,7 @@ Cocos2d-x v2 fork, oriented for modern platforms, C++11 and higher
 - High compability
 - Open and easy to modify
 
-## Main changes:
+## Improvements:
 - C++11 and higher support
 - (in plans) New perspective camera
 - (in plans) New touch handler
