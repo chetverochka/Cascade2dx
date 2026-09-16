@@ -1,0 +1,5 @@
+APP_STL := c++_static
+APP_CPPFLAGS := -frtti -fexceptions -DCC_ENABLE_CHIPMUNK_INTEGRATION=1 -DCOCOS2D_DEBUG=1
+APP_PLATFORM := android-34
+APP_ABI := armeabi-v7a
+APP_ALLOW_MISSING_DEPS := true

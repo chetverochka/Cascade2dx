@@ -1,0 +1,14 @@
+{
+    "rename": [],
+    "remove": [],
+    "replace_package_name": [
+        "app/src/main/AndroidManifest.xml",
+        "app/build.gradle",
+        "app/src/main/java/org/cocos2dx/hellocpp/MainActivity.java",
+        "app/src/androidTest/java/org/cocos2dx/hellocpp/ExampleInstrumentedTest.java",
+        "app/src/test/java/org/cocos2dx/hellocpp/ExampleUnitTest.java"
+    ],
+    "replace_project_name": [
+        "settings.gradle"
+    ]
+}

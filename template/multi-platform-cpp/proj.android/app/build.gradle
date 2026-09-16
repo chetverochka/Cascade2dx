@@ -1,0 +1,100 @@
+plugins {
+    id("com.android.application")
+}
+
+android {
+    namespace = "org.cocos2dx.hellocpp"
+    compileSdk = 34
+
+    defaultConfig {
+        applicationId = "org.cocos2dx.hellocpp"
+        minSdk = 21
+        targetSdk = 34
+        versionCode = 1
+        versionName = "1.0"
+
+        ndk {
+            abiFilters 'armeabi-v7a'
+            debugSymbolLevel 'FULL'
+        }
+
+        externalNativeBuild {
+            ndkBuild {
+                def cocosRoot = file("${projectDir}/../../../../")
+
+                def thirdPartyPrebuiltPath = file("${cocosRoot}/cocos2dx/platform/third_party/android/prebuilt")
+
+                def cocosDenshionPath = file("${cocosRoot}/CocosDenshion/android")
+                def extensionsPath = file("${cocosRoot}/extensions")
+                def box2dPath = file("${cocosRoot}/external/Box2D")
+                def chipmunkPath = file("${cocosRoot}/external/chipmunk")
+
+                def ndkModulePaths = [
+                        cocosRoot.getAbsolutePath(),
+                        cocosDenshionPath.getAbsolutePath(),
+                        extensionsPath.getAbsolutePath(),
+                        box2dPath.getAbsolutePath(),
+                        chipmunkPath.getAbsolutePath(),
+                        thirdPartyPrebuiltPath.getAbsolutePath()
+                ].join(';')
+
+                arguments(
+                        "NDK_MODULE_PATH=${ndkModulePaths}"
+                )
+            }
+        }
+
+
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled = false
+            proguardFiles(
+                    getDefaultProguardFile("proguard-android-optimize.txt"),
+                    "proguard-rules.pro"
+            )
+        }
+        debug {
+            minifyEnabled = false
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+
+    externalNativeBuild {
+        ndkBuild {
+            path = file("jni/Android.mk")
+        }
+    }
+
+    // copies all assets from Resources folder to APK assets folder
+    applicationVariants.all { variant ->
+        variant.mergeAssetsProvider.configure {
+            def sourceDir = file("${projectDir}/../../Resources") // path to Resources folder
+            def targetDir = it.outputDir.get().asFile           // path to assets folder
+
+            if (sourceDir.exists()) {
+                copy {
+                    from sourceDir
+                    into targetDir
+                }
+                println "[i] Copied resources from ${sourceDir} to ${targetDir}"
+            } else {
+                println "[!] Resources folder not found: ${sourceDir}"
+            }
+        }
+    }
+}
+
+dependencies {
+    implementation("androidx.appcompat:appcompat:1.7.1")
+    implementation("com.google.android.material:material:1.13.0")
+    implementation("androidx.constraintlayout:constraintlayout:2.2.1")
+    testImplementation("junit:junit:4.13.2")
+    androidTestImplementation("androidx.test.ext:junit:1.3.0")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.7.0")
+}
