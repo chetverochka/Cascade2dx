@@ -8,6 +8,8 @@ USING_NS_CC;
 
 NS_CC_BEGIN;
 
+//cocos2d::CCDCamera* cocos2d::CCDCamera::s_visitableCamera = NULL;
+
 static CCScene* getSceneRecursive(CCNode* nd) {
 	if (nd->getParent()) {
 		CCScene* parentScene = dynamic_cast<CCScene*>(nd->getParent());
@@ -122,6 +124,39 @@ void CCDCamera::apply()
 
 	kmGLTranslatef(-x, -y, 0.0f);
 	kmGLRotatef(-rotation, 0.0f, 0.0f, 1.0f);
+}
+
+CCPoint CCDCamera::unproject(CCPoint in, CCSize size) {
+	const float width = _zoomX * getScaleX();
+	const float height = _zoomY * getScaleY();
+
+	const CCPoint anchor = getAnchorPoint();
+
+	const float anchorX = anchor.x * width;
+	const float anchorY = anchor.y * height;
+
+	// Screen coords -> NDC [-1; 1]
+	float ndcX = in.x / size.width * 2.0f - 1.0f;
+	float ndcY = (size.height - in.y) / size.height * 2.0f - 1.0f;
+
+	// NDC -> coords relative to camera
+	float localX = (ndcX + 1.0f) * width * 0.5f - anchorX;
+	float localY = (ndcY + 1.0f) * height * 0.5f - anchorY;
+
+	// Back cam rotation
+	const float rotation = CC_DEGREES_TO_RADIANS(getRotation());
+
+	const float cosR = cosf(rotation);
+	const float sinR = sinf(rotation);
+
+	const float worldX = localX * cosR - localY * sinR + getPositionX();
+	const float worldY = localX * sinR + localY * cosR + getPositionY();
+
+	return CCPoint(worldX, worldY);
+}
+
+CCPoint CCDCamera::unproject(CCPoint in) {
+	return unproject(in, CCDirector::sharedDirector()->getWinSize());
 }
 
 void CCDCamera::setScene(CCScene* scene) {

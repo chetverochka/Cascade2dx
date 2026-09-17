@@ -65,6 +65,7 @@ bool CCScene::init()
                 winSize.width / 2,
                 winSize.height / 2
          ));
+         _defaultCamera->setAnchorPoint(ccp(0.5, 0.5));
          addChild(_defaultCamera);
 
          // success
@@ -108,6 +109,7 @@ void CCScene::visit() {
             continue;
         }
 
+        //camera->s_visitableCamera = camera;
         kmGLPushMatrix();
 
         camera->apply();
@@ -115,6 +117,7 @@ void CCScene::visit() {
         CCNode::visit();
         
         kmGLPopMatrix();
+        //camera->s_visitableCamera = NULL;
     }
 
     CCDirector::sharedDirector()->setProjection(ccDirectorProjection::kCCDirectorProjectionDefault);
