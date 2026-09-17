@@ -86,30 +86,42 @@ void CCDCamera::setDepth(int depth) {
 	}
 }
 
-void CCDCamera::apply() {
-	float width = _zoomX * getScaleX();
-	float height = _zoomY * getScaleY();
-	float rotation = getRotation();
+void CCDCamera::apply()
+{
+	const float width = _zoomX * getScaleX();
+	const float height = _zoomY * getScaleY();
 
-	float anchorW = getAnchorPoint().x * width;
-	float anchorH = getAnchorPoint().y * height;
+	const CCPoint anchor = getAnchorPoint();
 
-	float x = getPositionX();
-	float y = getPositionY();
+	const float anchorX = anchor.x * width;
+	const float anchorY = anchor.y * height;
 
-	kmMat4 orthoMatrix;
-	kmMat4OrthographicProjection(&orthoMatrix, -width/2, width/2, -height/2, height/2, _nearPlane, _farPlane);
+	const float x = getPositionX();
+	const float y = getPositionY();
+	const float rotation = getRotation();
 
 	kmGLMatrixMode(KM_GL_PROJECTION);
 	kmGLLoadIdentity();
+
+	kmMat4 orthoMatrix;
+
+	kmMat4OrthographicProjection(
+		&orthoMatrix,
+		-anchorX,
+		width - anchorX,
+		-anchorY,
+		height - anchorY,
+		_nearPlane,
+		_farPlane
+	);
 
 	kmGLMultMatrix(&orthoMatrix);
 
 	kmGLMatrixMode(KM_GL_MODELVIEW);
 	kmGLLoadIdentity();
 
-	kmGLRotatef(rotation, 0.f, 0.f, 1.f);
-	kmGLTranslatef(-x + anchorW, -y + anchorH, 0.f);
+	kmGLTranslatef(-x, -y, 0.0f);
+	kmGLRotatef(-rotation, 0.0f, 0.0f, 1.0f);
 }
 
 void CCDCamera::setScene(CCScene* scene) {
