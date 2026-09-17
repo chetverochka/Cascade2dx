@@ -28,8 +28,11 @@ THE SOFTWARE.
 #define __CCSCENE_H__
 
 #include "base_nodes/CCNode.h"
+#include "CCDCamera.h"
+#include <vector>
 
 NS_CC_BEGIN
+
 
 /**
  * @addtogroup scene
@@ -54,6 +57,21 @@ public:
     bool init();
 
     static CCScene *create(void);
+
+    CCArray* getCameras();
+
+    void visit() override;
+
+    CCDCamera* getDefaultCamera() { return _defaultCamera; }
+private:
+    void reorderCameras();
+
+    CCDCamera* _defaultCamera;
+    CCArray* _cameras;
+
+    bool _cameraOrderDirty;
+
+    friend class CCDCamera;
 };
 
 // end of scene group
