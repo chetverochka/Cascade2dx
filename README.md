@@ -10,10 +10,11 @@ Cocos2d-x v2 fork, oriented for modern platforms, C++11 and higher
 ## Improvements:
 - C++11 and higher support
 - New orthographic camera
-- (in plans) New touch handler
 - Python 3.x project creator
 
-
+## Planned improvements:
+- New touch handler
+- Replace selectors to std::function<>
 # Who is Cascade2dx for
 
 | Game creator who need crossplaform engine | Who loves C++ and raw pointers :) | Developers who need to update their old games written in Cocos2d-x v2 |
